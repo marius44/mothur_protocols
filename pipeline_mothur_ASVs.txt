@@ -2,10 +2,10 @@
 make.file(inputdir=., type=fastq, prefix=stability)
 
 #hacer contigs
-mothur > make.contigs(file=stability.files, processors=23)
+make.contigs(file=stability.files, processors=23)
 
 #Checar los contigs
-mothur > summary.seqs(fasta=stability.trim.contigs.fasta)
+summary.seqs(fasta=stability.trim.contigs.fasta)
 
 #Screen.seqs Recuerda cambiar a tus valores entre el intervalo 2.5 y 97.5%
 screen.seqs(fasta=stability.trim.contigs.fasta, group=stability.contigs.groups, maxambig=0, minlenght=439, maxlenght=467)
@@ -96,7 +96,6 @@ make.biom(shared=stability.shared, constaxonomy=stability.taxonomy)
 #pcoa
 pcoa(phylip=stability.thetayc.ASV.lt.ave.dist)
 
-#nmds
 
 
 
