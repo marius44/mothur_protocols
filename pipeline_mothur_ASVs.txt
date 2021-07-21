@@ -1,0 +1,102 @@
+#Hacer el stability.files
+make.file(inputdir=., type=fastq, prefix=stability)
+
+#hacer contigs
+mothur > make.contigs(file=stability.files, processors=23)
+
+#Checar los contigs
+mothur > summary.seqs(fasta=stability.trim.contigs.fasta)
+
+#Screen.seqs Recuerda cambiar a tus valores entre el intervalo 2.5 y 97.5%
+screen.seqs(fasta=stability.trim.contigs.fasta, group=stability.contigs.groups, maxambig=0, minlenght=439, maxlenght=467)
+
+#mothur, recuerda lo que hacemos
+get.current()
+
+#¿qué sobró?
+summary.seqs()
+
+#secuencuas unicas
+unique.seqs(fasta=stability.trim.contigs.good.fasta)
+
+#tabla de cuentas
+count.seqs(name=stability.trim.contigs.good.names, group=stability.contigs.good.groups)
+
+summary.seqs(count=stability.trim.contigs.good.count_table)
+
+###Por alguna razón, Félix se salta el pcr.seqs directo al align.seqs
+
+#Alineamiento de secuencias
+align.seqs(fasta=stability.trim.contigs.good.unique.fasta, reference=silva.bacteria.fasta)
+
+#qué salió?
+summary.seqs(fasta=stability.trim.contigs.good.unique.align, count=stability.trim.contigs.good.count_table)
+
+#Otro screen.seqs Recuerda cambiar a tus valores entre el intervalo 2.5 y 97.5%
+screen.seqs(fasta=stability.trim.contigs.good.unique.align, count=stability.trim.contigs.good.count_table, summary=stability.trim.contigs.good.unique.summary, start=6388, end=25316, maxhomop=8)
+
+#qué salió?
+summary.seqs(fasta=current, count=current)
+
+#filtrar los gaps y otros espurios
+filter.seqs(fasta=stability.trim.contigs.good.unique.good.align, vertical=T, trump=.)
+
+#secuencias unicas
+unique.seqs(fasta=stability.trim.contigs.good.unique.good.filter.fasta, count=stability.trim.contigs.good.good.count_table)
+
+#precluster
+pre.cluster(fasta=stability.trim.contigs.good.unique.good.filter.unique.fasta, count=stability.trim.contigs.good.unique.good.filter.count_table, diffs=2)
+
+#chimeras
+chimera.vsearch(fasta=stability.trim.contigs.good.unique.good.filter.unique.precluster.fasta, count=stability.trim.contigs.good.unique.good.filter.unique.precluster.count_table, dereplicate=t)
+
+#remover chimeras
+remove.seqs(fasta=stability.trim.contigs.good.unique.good.filter.unique.precluster.fasta, accnos=stability.trim.contigs.good.unique.good.filter.unique.precluster.denovo.vsearch.accnos)
+
+#qué salió?
+summary.seqs(fasta=current, count=current)
+
+#clasificacion taxo
+classify.seqs(fasta=stability.trim.contigs.good.unique.good.filter.unique.precluster.pick.fasta, count=stability.trim.contigs.good.unique.good.filter.unique.precluster.denovo.vsearch.pick.count_table, reference=trainset9_032012.pds.fasta, taxonomy=trainset9_032012.pds.tax, cutoff=80)
+
+#remoción de indeseables
+remove.lineage(fasta=stability.trim.contigs.good.unique.good.filter.unique.precluster.pick.fasta, count=stability.trim.contigs.good.unique.good.filter.unique.precluster.denovo.vsearch.pick.count_table, taxonomy=stability.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.taxonomy, taxon=Chloroplast-Mitochondria-unknown-Eukaryota)
+
+#qué salió?
+summary.tax(taxonomy=current, count=current)
+
+##Felix se salta los errores del mock
+###Pasos para ASV
+#make.shared
+make.shared(stability.trim.contigs.good.unique.good.filter.unique.precluster.denovo.vsearch.pick.pick.count_table)
+
+#Clasifiacipn en ASVs (Esto se salta todos los paso de OTUS)
+classify.otu(list=stability.trim.contigs.good.unique.good.filter.unique.precluster.denovo.vsearch.pick.pick.ASV.list, count=stability.trim.contigs.good.unique.good.filter.unique.precluster.denovo.vsearch.pick.pick.count_table, taxonomy=stability.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.pick.taxonomy, label=ASV)
+
+#renombrar
+rename.file(taxonomy=stability.trim.contigs.good.unique.good.filter.unique.precluster.denovo.vsearch.pick.pick.ASV.ASV.cons.taxonomy, shared=stability.trim.contigs.good.unique.good.filter.unique.precluster.denovo.vsearch.pick.pick.ASV.shared)
+
+#contar las secuencias de cada muestra
+count.groups(shared=stability.shared)
+
+#Felix se salta el subsample
+
+#rarefaccion
+rarefaction.single(stability.shared, calc=sobs, freq=100)
+
+#indices
+summary.single(shared=stability.shared, calc=nseqs-coverage-sobs-invsimpson-shannon-chao-simpson-simpsoneven-bootstrap-goodscoverage, subsample=T)
+
+#biom aqui lo deja Félix
+make.biom(shared=stability.shared, constaxonomy=stability.taxonomy)
+
+# Beta div
+ dist.shared(shared=stability.shared, calc=thetayc-jclass, subsample=t)
+
+#pcoa
+pcoa(phylip=stability.thetayc.ASV.lt.ave.dist)
+
+#nmds
+
+
+
