@@ -1,3 +1,6 @@
+#Pipeline desarrollado por Estefanny Gutiérrez
+# Agosto 2021
+
 make.file(inputdir=., type=fastq, prefix=stability) 
 
 make.contigs(file=stability.files, processors=8) 
