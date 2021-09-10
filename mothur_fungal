@@ -1,0 +1,44 @@
+make.file(inputdir=., type=fastq, prefix=stability) 
+
+make.contigs(file=stability.files, processors=8) 
+
+summary.seqs(fasta=stability.trim.contigs.fasta) 
+
+screen.seqs(fasta=stability.trim.contigs.fasta, group=stability.contigs.groups, summary=stability.trim.contigs.summary, minlength=27, maxlength=275) 
+
+unique.seqs(fasta=stability.trim.contigs.good.fasta) 
+
+count.seqs(name=stability.trim.contigs.good.names, group=stability.contigs.good.groups)
+
+summary.seqs(count=stability.trim.contigs.good.count_table) 
+
+pre.cluster(fasta=stability.trim.contigs.good.unique.fasta, count=stability.trim.contigs.good.count_table, diffs=2) 
+
+chimera.vsearch(fasta=stability.trim.contigs.good.unique.precluster.fasta, count=stability.trim.contigs.good.unique.precluster.count_table, dereplicate=t) 
+
+remove.seqs(fasta=stability.trim.contigs.good.unique.precluster.fasta, accnos=stability.trim.contigs.good.unique.precluster.denovo.vsearch.accnos) 
+
+summary.seqs(fasta=stability.trim.contigs.good.unique.precluster.pick.fasta, count=stability.trim.contigs.good.unique.precluster.denovo.vsearch.pick.count_table) 
+
+# En lugar de trainset se usa la Database de UNITE (IMPORTANTE: Se usa en FASTA Y TAX de no hacerlo marcará error de database no alineada!)
+classify.seqs(fasta=stability.trim.contigs.good.unique.precluster.pick.fasta, count=stability.trim.contigs.good.unique.precluster.denovo.vsearch.pick.count_table, reference=database.fasta, taxonomy=database.tax, cutoff=80) 
+
+# Database se cambia por la base de datos UNITE 
+remove.lineage(fasta=stability.trim.contigs.good.unique.precluster.pick.fasta, count=stability.trim.contigs.good.unique.precluster.denovo.vsearch.pick.count_table, taxonomy=stability.trim.contigs.good.unique.precluster.pick.database.wang.taxonomy, taxon=Chloroplast-Mitochondria-unknown-Archaea-Bacteria) 
+
+# Alternativamente se puede hacer esto:
+# Database se cambia por la base de datos UNITE 
+remove.lineage(fasta=stability.trim.contigs.good.unique.precluster.pick.fasta, count=stability.trim.contigs.good.unique.precluster.denovo.vsearch.pick.count_table, taxonomy=stability.trim.contigs.good.unique.precluster.pick.database.wang.taxonomy, taxon=Chloroplast-Mitochondria-Archaea-Bacteria)
+
+summary.tax(fasta=current, count=current)
+
+make.shared(count=stability.trim.contigs.good.unique.precluster.denovo.vsearch.pick.pick.count_table)
+
+# Database se cambia por la base de datos UNITE 
+classify.otu(list=stability.trim.contigs.good.unique.precluster.denovo.vsearch.pick.pick.ASV.list, count=stability.trim.contigs.good.unique.precluster.denovo.vsearch.pick.pick.count_table, taxonomy=stability.trim.contigs.good.unique.precluster.pick.database.wang.pick.taxonomy, label=asv)
+
+make.biom(shared=stability.trim.contigs.good.unique.precluster.denovo.vsearch.pick.pick.ASV.shared, constaxonomy=stability.trim.contigs.good.unique.precluster.denovo.vsearch.pick.pick.ASV.ASV.cons.taxonomy)
+
+rarefaction.single(shared=stability.trim.contigs.good.unique.precluster.denovo.vsearch.pick.pick.ASV.shared, calc=sobs, freq=100)
+
+summary.single(shared=stability.trim.contigs.good.unique.precluster.denovo.vsearch.pick.pick.ASV.shared, calc=nseqs-coverage-sobs-invsimpson-shannon-chao, subsample=T)
