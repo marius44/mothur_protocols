@@ -1,0 +1,7 @@
+#Este minipipeline solo ha funcionado en nuestro servidor CereBro (Ubuntu 18.04 con python 2.7.17)
+
+#El script de python se corre con el último tax.summary de mothur generando un xml de salida
+python mothur_krona_XML.py stability.paired.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.pick.tax.summary > output_mothur_krona.xml
+
+#Con la suite de krona descargada se corre el xml del paso previo. Se obtendrá un archivo html
+ktImportXML output_mothur_krona.xml
