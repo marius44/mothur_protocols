@@ -1,0 +1,30 @@
+library("ggplot")
+library("tidyverse")
+library(ggsci)
+
+setwd("/home/mario/")
+
+rarefy <- read_tsv(file="stability.trim.contigs.good.unique.good.filter.unique.precluster.denovo.vsearch.pick.pick.ASV.groups.rarefaction") %>%
+  select(-contains("lci-"), -contains
+         
+rarefy <- read_tsv(file="stability.trim.contigs.good.unique.good.filter.unique.precluster.denovo.vsearch.pick.pick.ASV.groups.rarefaction") %>%
+           select(-contains("lci-"), -contains("hci-")) %>%
+           pivot_longer(cols=c(-numsampled), names_to='sample', values_to='sobs') %>%
+           mutate(sample=str_replace_all(sample, pattern="0.03-", replacement="")) %>%
+           drop_na()
+
+legend_title <- "Samples"
+
+curva_rare <- ggplot(rarefy,
+                     aes(x=numsampled,
+                         y=sobs,
+                         group=sample,
+                         color=sample))+
+  geom_line()+
+  xlab("Sampled")+
+  ylab("Observed")+
+  ggtitle("Rarefaction curve water column Isabel Island lake")+
+  scale_fill_manual(legend_title)  +
+  scale_color_tron() 
+
+curva_rare
