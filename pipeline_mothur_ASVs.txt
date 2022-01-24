@@ -5,10 +5,18 @@ make.file(inputdir=., type=fastq, prefix=stability)
 make.contigs(file=stability.files, processors=23)
 
 #Checar los contigs
+summary.seqs(fasta=stability.trim.contigs.fasta,count=stability.contigs.count_table)
+##### Del SOP
 summary.seqs(fasta=stability.trim.contigs.fasta)
 
+make.contigs(file=stability.files, maxambig=0, maxlength=451)
+
+summary.seqs(fasta=stability.trim.contigs.fasta, count=stability.contigs.count_table)
+
+####
+
 #Screen.seqs Recuerda cambiar a tus valores entre el intervalo 2.5 y 97.5%
-screen.seqs(fasta=stability.trim.contigs.fasta, group=stability.contigs.groups, maxambig=0, minlenght=439, maxlenght=467)
+screen.seqs(fasta=stability.trim.contigs.fasta, count=stability.contigs.count_table, maxambig=0, maxlenght=451) #minlenght=439)
 
 #mothur, recuerda lo que hacemos
 get.current()
@@ -17,17 +25,17 @@ get.current()
 summary.seqs()
 
 #secuencuas unicas
-unique.seqs(fasta=stability.trim.contigs.good.fasta)
-
+unique.seqs(fasta=stability.trim.contigs.fasta, count=stability.contigs.count_table)
+summary.seqs(count=stability.trim.contigs.count_table)
 #tabla de cuentas
-count.seqs(name=stability.trim.contigs.good.names, group=stability.contigs.good.groups)
+#count.seqs(name=stability.trim.contigs.good.names, group=stability.contigs.good.groups)
 
 summary.seqs(count=stability.trim.contigs.good.count_table)
 
 ###Por alguna razón, Félix se salta el pcr.seqs directo al align.seqs
 
 #Alineamiento de secuencias
-align.seqs(fasta=stability.trim.contigs.good.unique.fasta, reference=silva.bacteria.fasta)
+align.seqs(fasta=stability.trim.contigs.unique.fasta, reference=silva.bacteria.fasta)
 
 #qué salió?
 summary.seqs(fasta=stability.trim.contigs.good.unique.align, count=stability.trim.contigs.good.count_table)
