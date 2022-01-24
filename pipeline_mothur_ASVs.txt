@@ -35,7 +35,7 @@ summary.seqs(count=stability.trim.contigs.good.count_table)
 ###Por alguna razón, Félix se salta el pcr.seqs directo al align.seqs
 
 #Alineamiento de secuencias
-align.seqs(fasta=stability.trim.contigs.unique.fasta, reference=silva.bacteria.fasta)
+align.seqs(fasta=stability.trim.contigs.unique.fasta, reference=silva.full_v138.fasta) # Cambié "silva.v4.fasta" por "silva.full_v138.fasta" completa de 2021 #https://github.com/NorwegianVeterinaryInstitute/BioinfTraining/blob/master/Building_classification_databases.md | y | https://forum.mothur.org/t/fasta-mothur-eft/3409 | y |
 
 #qué salió?
 summary.seqs(fasta=stability.trim.contigs.good.unique.align, count=stability.trim.contigs.good.count_table)
