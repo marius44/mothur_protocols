@@ -1,12 +1,9 @@
-library("ggplot")
+library("ggplot2")
 library("tidyverse")
 library(ggsci)
 
 setwd("/home/mario/")
 
-rarefy <- read_tsv(file="stability.trim.contigs.good.unique.good.filter.unique.precluster.denovo.vsearch.pick.pick.ASV.groups.rarefaction") %>%
-  select(-contains("lci-"), -contains
-         
 rarefy <- read_tsv(file="stability.trim.contigs.good.unique.good.filter.unique.precluster.denovo.vsearch.pick.pick.ASV.groups.rarefaction") %>%
            select(-contains("lci-"), -contains("hci-")) %>%
            pivot_longer(cols=c(-numsampled), names_to='sample', values_to='sobs') %>%
