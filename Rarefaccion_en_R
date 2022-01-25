@@ -25,3 +25,6 @@ curva_rare <- ggplot(rarefy,
   scale_color_tron() 
 
 curva_rare
+
+ggsave("rarefaction.png", path = ".", width = 10, height = 10, device = "png", dpi = 800)
+ggsave("rarefaction.pdf", path = ".", width = 10, height = 10, device = "pdf", dpi = 800)
