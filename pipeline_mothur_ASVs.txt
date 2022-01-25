@@ -38,7 +38,7 @@ summary.seqs(count=stability.trim.contigs.good.count_table)
 align.seqs(fasta=stability.trim.contigs.unique.fasta, reference=silva.full_v138.fasta) # Cambié "silva.v4.fasta" por "silva.full_v138.fasta" completa de 2021 #https://github.com/NorwegianVeterinaryInstitute/BioinfTraining/blob/master/Building_classification_databases.md | y | https://forum.mothur.org/t/fasta-mothur-eft/3409 | y |
 
 #qué salió?
-summary.seqs(fasta=stability.trim.contigs.good.unique.align, count=stability.trim.contigs.good.count_table)
+summary.seqs(fasta=stability.trim.contigs.unique.align, count=stability.trim.contigs.count_table)
 
 #Otro screen.seqs Recuerda cambiar a tus valores entre el intervalo 2.5 y 97.5%
 screen.seqs(fasta=stability.trim.contigs.good.unique.align, count=stability.trim.contigs.good.count_table, summary=stability.trim.contigs.good.unique.summary, start=6388, end=25316, maxhomop=8)
@@ -50,13 +50,13 @@ summary.seqs(fasta=current, count=current)
 filter.seqs(fasta=stability.trim.contigs.good.unique.good.align, vertical=T, trump=.)
 
 #secuencias unicas
-unique.seqs(fasta=stability.trim.contigs.good.unique.good.filter.fasta, count=stability.trim.contigs.good.good.count_table)
+unique.seqs(fasta=stability.trim.contigs.unique.good.filter.fasta, count=stability.trim.contigs.good.count_table)
 
 #precluster
-pre.cluster(fasta=stability.trim.contigs.good.unique.good.filter.unique.fasta, count=stability.trim.contigs.good.unique.good.filter.count_table, diffs=2)
+pre.cluster(fasta=stability.trim.contigs.unique.good.filter.unique.fasta, count=stability.trim.contigs.unique.good.filter.count_table, diffs=2)
 
 #chimeras
-chimera.vsearch(fasta=stability.trim.contigs.good.unique.good.filter.unique.precluster.fasta, count=stability.trim.contigs.good.unique.good.filter.unique.precluster.count_table, dereplicate=t)
+chimera.vsearch(fasta=stability.trim.contigs.unique.good.filter.unique.precluster.fasta, count=stability.trim.contigs.unique.good.filter.unique.precluster.count_table, dereplicate=t)
 
 #remover chimeras
 remove.seqs(fasta=stability.trim.contigs.good.unique.good.filter.unique.precluster.fasta, accnos=stability.trim.contigs.good.unique.good.filter.unique.precluster.denovo.vsearch.accnos)
@@ -76,7 +76,7 @@ summary.tax(taxonomy=current, count=current)
 ##Felix se salta los errores del mock
 ###Pasos para ASV
 #make.shared
-make.shared(stability.trim.contigs.good.unique.good.filter.unique.precluster.denovo.vsearch.pick.pick.count_table)
+make.shared(count=stability.trim.contigs.good.unique.good.filter.unique.precluster.denovo.vsearch.pick.pick.count_table)
 
 #Clasifiacipn en ASVs (Esto se salta todos los paso de OTUS)
 classify.otu(list=stability.trim.contigs.good.unique.good.filter.unique.precluster.denovo.vsearch.pick.pick.ASV.list, count=stability.trim.contigs.good.unique.good.filter.unique.precluster.denovo.vsearch.pick.pick.count_table, taxonomy=stability.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.pick.taxonomy, label=ASV)
