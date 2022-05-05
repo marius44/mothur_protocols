@@ -15,8 +15,8 @@ summary.seqs(fasta=stability.trim.contigs.fasta, count=stability.contigs.count_t
 
 ####
 
-#Screen.seqs Recuerda cambiar a tus valores entre el intervalo 2.5 y 97.5%
-screen.seqs(fasta=stability.trim.contigs.fasta, count=stability.contigs.count_table, maxambig=0, maxlenght=451) #minlenght=439)
+#Screen.seqs Recuerda cambiar a tus valores entre el intervalo 2.5 (starts) y 97.5% (end) 
+screen.seqs(fasta=stability.trim.contigs.fasta, count=stability.contigs.count_table, maxambig=0, maxlength=451)
 
 #mothur, recuerda lo que hacemos
 get.current()
