@@ -1,7 +1,10 @@
-#Este minipipeline solo ha funcionado en nuestro servidor CereBro (Ubuntu 18.04 con python 2.7.17)
+# Se debe tener el script mothur_krona_XML.py para poder correrlo.
+# Corre con python2, por lo que es necesario usar un ambiente conda para ello.
+conda activate conda activate create_krona_mothur
 
-#El script de python se corre con el último tax.summary de mothur generando un xml de salida
+# El script de python se corre con el último tax.summary de mothur generando un xml de salida
 python mothur_krona_XML.py stability.paired.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.pick.tax.summary > output_mothur_krona.xml
 
-#Con la suite de krona descargada se corre el xml del paso previo. Se obtendrá un archivo html
+# Después de correr el siguiente comando se obtendrá un archivo html. Ese archivo es el gráfico krona que puede ser 
+# visualizado en cualquier navegador (Chrome, Safari, Firefox)
 ktImportXML output_mothur_krona.xml
